@@ -26,6 +26,7 @@ async function main() {
     const logScript = `git log ${latestRelease}..HEAD --pretty=format:'{%n  "commit": "%H",%n  "author": "%aN <%aE>",%n  "date": "%ad",%n  "message": "%f"%n},'     $@ |     perl -pe 'BEGIN{print "["}; END{print "]\n"}' |     perl -pe 's/},]/}]/'`;
 
 
+
     console.log(`logScript: ${logScript}`);
     const logs = exec.exec(logScript)
     console.log(`The logs: ${logs}`);
