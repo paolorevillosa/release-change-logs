@@ -14,7 +14,7 @@ try {
 
   const latestRelease = exec.exec('git describe --tags --abbrev=0');
   
-  const logScript = 'git log '+ latestRelease +'..HEAD    --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN <%aE>",%n  "date": "%ad",%n  "message": "%f"%n},\'     $@ |     perl -pe \'BEGIN{print "["}; END{print "]\n"}\' |     perl -pe \'s/},]/}]/';
+  const logScript = 'git log '+ latestRelease +'..HEAD';
   const logs = exec.exec(logScript)
   console.log(`The logs: ${logs}`);
 } catch (error) {
