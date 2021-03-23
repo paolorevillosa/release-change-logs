@@ -20,6 +20,7 @@ async function main() {
     // Get the JSON webhook payload for the event that triggered the workflow
     const payload = JSON.stringify(github.context.payload, undefined, 2);
 
+    await exec.exec('git fetch');
     const latestRelease = await exec.exec('git describe --tags --abbrev=0');
     const logScript = `git log ${latestRelease}..HEAD`;
 
