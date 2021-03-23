@@ -19,6 +19,9 @@ try {
   const payload = JSON.stringify(github.context.payload, undefined, 2);
   
 
+  //update repo
+  exec.exec('git fetch');
+
   const latestRelease = exec.exec('git describe --tags --abbrev=0');
   
   const logScript = 'git log '+ latestRelease +'..HEAD';
