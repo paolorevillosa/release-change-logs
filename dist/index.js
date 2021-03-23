@@ -7,7 +7,7 @@ module.exports =
 
 const core = __nccwpck_require__(127);
 const github = __nccwpck_require__(134);
-const exedc = __nccwpck_require__(49);
+const exec = __nccwpck_require__(49);
 
 try {
   // `who-to-greet` input defined in action metadata file
@@ -18,7 +18,7 @@ try {
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2);
   
-  const details = exec('git describe --tags --abbrev=0')
+  const details = exec.exec('git describe --tags --abbrev=0')
   console.log(`The details: ${details}`);
 } catch (error) {
   core.setFailed(error.message);

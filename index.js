@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const exedc = require('@actions/exec');
+const exec = require('@actions/exec');
 
 try {
   // `who-to-greet` input defined in action metadata file
@@ -11,7 +11,7 @@ try {
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2);
   
-  const details = exec('git describe --tags --abbrev=0')
+  const details = exec.exec('git describe --tags --abbrev=0')
   console.log(`The details: ${details}`);
 } catch (error) {
   core.setFailed(error.message);
