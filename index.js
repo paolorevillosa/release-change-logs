@@ -23,7 +23,7 @@ async function main() {
 
     const latestRelease = await exec2('git describe --tags --abbrev=0');
     console.log(`latest tag: ${latestRelease}`);
-    const logScript = `git log ${latestRelease}..HEAD --pretty=format:'{%n  "commit": "%H",%n  "author": "%aN <%aE>",%n  "date": "%ad",%n  "message": "%f"%n},'     $@ |     perl -pe 'BEGIN{print "["}; END{print "]\n"}' |     perl -pe 's/},]/}]/'`;
+    const logScript = "git log ${latestRelease}..HEAD --pretty=format:'{%n  \"commit\": \"%H\",%n  \"author\": \"%aN <%aE>\",%n  \"date\": \"%ad\",%n  \"message\": \"%f\"%n},'     $@ |     perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' |     perl -pe 's/},]/}]/'";
 
 
 
