@@ -9,7 +9,7 @@ const core = __nccwpck_require__(127);
 const github = __nccwpck_require__(134);
 const exec = __nccwpck_require__(49);
 
-const cp = __nccwpck_require__(129);
+const child_process = __nccwpck_require__(129);
 const util = __nccwpck_require__(669);
 
 
