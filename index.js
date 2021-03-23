@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const exec = require('@actions/exec');
+const util = require('util');
 
 async function main() {
 
@@ -13,12 +14,13 @@ async function main() {
     // Get the JSON webhook payload for the event that triggered the workflow
     const payload = JSON.stringify(github.context.payload, undefined, 2);
 
-    await exec.exec('git fetch');
-    const latestRelease = await exec.exec('git describe --tags --abbrev=0');
 
+    
+    
 
-    console.log(`latest tag: ${latestRelease}`);
-    const logScript = `git log ${latestRelease}..HEAD`;
+    const latestRelease = await exec2('git describe --tags --abbrev=0');
+    console.log(`latest tag: ${myOutput}`);
+    const logScript = `git log ${myOutput}..HEAD`;
 
 
     console.log(`logScript: ${logScript}`);
@@ -27,6 +29,12 @@ async function main() {
   } catch (error) {
     core.setFailed(error.message);
   }  
+}
+
+async function exec2(command) {
+      const { stdout, stderr } = await util.promisify(child_process.exec)(command)
+      if (stderr) console.error(stderr)
+      return stdout
 }
 
 main();

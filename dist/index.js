@@ -8,6 +8,7 @@ module.exports =
 const core = __nccwpck_require__(127);
 const github = __nccwpck_require__(134);
 const exec = __nccwpck_require__(49);
+const util = __nccwpck_require__(669);
 
 async function main() {
 
@@ -20,12 +21,13 @@ async function main() {
     // Get the JSON webhook payload for the event that triggered the workflow
     const payload = JSON.stringify(github.context.payload, undefined, 2);
 
-    await exec.exec('git fetch');
-    const latestRelease = await exec.exec('git describe --tags --abbrev=0');
 
+    
+    
 
-    console.log(`latest tag: ${latestRelease}`);
-    const logScript = `git log ${latestRelease}..HEAD`;
+    const latestRelease = await exec2('git describe --tags --abbrev=0');
+    console.log(`latest tag: ${myOutput}`);
+    const logScript = `git log ${myOutput}..HEAD`;
 
 
     console.log(`logScript: ${logScript}`);
@@ -34,6 +36,12 @@ async function main() {
   } catch (error) {
     core.setFailed(error.message);
   }  
+}
+
+async function exec2(command) {
+      const { stdout, stderr } = await util.promisify(child_process.exec)(command)
+      if (stderr) console.error(stderr)
+      return stdout
 }
 
 main();
