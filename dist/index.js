@@ -7,6 +7,7 @@ module.exports =
 
 const core = __nccwpck_require__(127);
 const github = __nccwpck_require__(134);
+const exedc = __nccwpck_require__(946);
 
 try {
   // `who-to-greet` input defined in action metadata file
@@ -17,9 +18,13 @@ try {
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
   console.log(`The event payload: ${payload}`);
+  
+  const details = exec('git describe --tags --abbrev=0')
+  console.log(`The details: ${details}`);
 } catch (error) {
   core.setFailed(error.message);
 }
+
 
 /***/ }),
 
@@ -5845,6 +5850,14 @@ function wrappy (fn, cb) {
     return ret
   }
 }
+
+
+/***/ }),
+
+/***/ 946:
+/***/ ((module) => {
+
+module.exports = eval("require")("@actions/exec");
 
 
 /***/ }),
