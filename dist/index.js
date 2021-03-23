@@ -24,7 +24,9 @@ try {
 
   const latestRelease = exec.exec('git describe --tags --abbrev=0');
   
-  const logScript = 'git log v3..HEAD';
+  const logScript = `git log ${latestRelease}..HEAD`;
+
+  console.log(`logScript: ${logScript}`);
   const logs = exec.exec(logScript)
   console.log(`The logs: ${logs}`);
 } catch (error) {
