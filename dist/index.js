@@ -44,7 +44,7 @@ async function main() {
 async function exec2(command) {
       const { stdout, stderr } = await util.promisify(child_process.exec)(command)
       if (stderr) console.error(stderr)
-      return stdout
+      return stdout.trim();
 }
 
 main();
