@@ -29,8 +29,8 @@ async function main() {
     
 
     const latestRelease = await exec2('git describe --tags --abbrev=0');
-    console.log(`latest tag: ${myOutput}`);
-    const logScript = `git log ${myOutput}..HEAD`;
+    console.log(`latest tag: ${latestRelease}`);
+    const logScript = `git log ${latestRelease}..HEAD`;
 
 
     console.log(`logScript: ${logScript}`);
