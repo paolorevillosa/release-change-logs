@@ -15,6 +15,9 @@ async function main() {
 
     await exec.exec('git fetch');
     const latestRelease = await exec.exec('git describe --tags --abbrev=0');
+
+
+    console.log(`latest tag: ${latestRelease}`);
     const logScript = `git log ${latestRelease}..HEAD`;
 
 
