@@ -10,10 +10,13 @@ try {
   core.setOutput("time", time);
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2);
-  const details = exec.exec('git log $(git describe --tags --abbrev=0)..HEAD    --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN <%aE>",%n  "date": "%ad",%n  "message": "%f"%n},\'     $@ |     perl -pe \'BEGIN{print "["}; END{print "]\n"}\' |     perl -pe \'s/},]/}]/')
+  
 
-
-  console.log(`The details: ${details}`);
+  const latestRelease = exec.exec('git describe --tags --abbrev=0');
+  
+  const logScript = 'git log '+ latestRelease +'..HEAD    --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN <%aE>",%n  "date": "%ad",%n  "message": "%f"%n},\'     $@ |     perl -pe \'BEGIN{print "["}; END{print "]\n"}\' |     perl -pe \'s/},]/}]/';
+  const logs = exec.exec(logScript)
+  console.log(`The logs: ${logs}`);
 } catch (error) {
   core.setFailed(error.message);
 }
