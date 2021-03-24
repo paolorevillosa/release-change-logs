@@ -79,22 +79,22 @@ async function generatedChangeLogs(data){
   var changeLogMessage = "## What’s New";
 
   if(feature.length > 0){
-    changeLogMessage += "<br/>### Features";
+    changeLogMessage += "\n\n### Features";
 
     for (let i = 0; i < feature.length; i++) {
 
-      changeLogMessage += "<br/>* " + feature[0] + feature[4]
+      changeLogMessage += "\n* " + feature[i][3] + feature[i][4]
     }
   }
 
 
   if(bugs.length > 0){
-    changeLogMessage += "<br/>";
-    changeLogMessage += "<br/> ### BugFixes";
+    changeLogMessage += "\n";
+    changeLogMessage += "\n ### BugFixes";
 
     for (let i = 0; i < bugs.length; i++) {
 
-      changeLogMessage += "<br/> * " + bugs[0] + bugs[4]
+      changeLogMessage += "\n * " + bugs[i][3] + bugs[i][4]
     }
   }
 
