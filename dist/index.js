@@ -23,8 +23,7 @@ async function main() {
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;  
     const logs = await exec(logScript)
     const parsedLogs = await parseLogsJson(logs);
-
-
+    const changeLogs = await generatedChangeLogs(parsedLogs);
 
 
     //log this for debugging purposes
