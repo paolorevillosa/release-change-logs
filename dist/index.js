@@ -34,7 +34,7 @@ async function main() {
     const logScript = "git log " + latestRelease + "..HEAD " + format;// + endPart;
 
     console.log(`logScript: ${logScript}`);
-    const logs = exec2(logScript)
+    const logs = await exec2(logScript)
     console.log(`The logs: ${logs}`);
   } catch (error) {
     core.setFailed(error.message);
