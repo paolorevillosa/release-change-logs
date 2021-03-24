@@ -13,6 +13,7 @@ const util = __nccwpck_require__(669);
 
 let featureTag = "FEATURE";
 let bugTag = "BUGFIX";
+let tags = (/* unused pure expression or super */ null && (["FEATURE","Bugfixes"]));
 
 async function main() {
 
@@ -25,7 +26,7 @@ async function main() {
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
-    const latestRelease = 'v3';//await exec('git describe --tags --abbrev=0');
+    const latestRelease = await exec('git describe --tags --abbrev=0');
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;  
     const logs = await exec(logScript)
     const parsedLogs = await parseLogsJson(logs);
@@ -64,6 +65,51 @@ async function exec(command) {
 }
 
 async function parseLogsJson(logs){
+  var feature = new Array();
+  var bug = new Array();
+
+  var parsedJSON = JSON.parse(logs);
+  for( let num in parsedJSON ){
+    var log = parsedJSON[num];
+    var message = log.message;
+    
+    var splitMessage = message.split("-");
+    if(splitMessage[0].toLowerCase() == featureTag.toLowerCase()){
+      var type = splitMessage[0];
+      var id = splitMessage[1];
+      
+      splitMessage.shift();
+      splitMessage.shift();
+      var message = splitMessage.join(" ");
+      feature.push(new Array(type, id, message, log.author));
+    }
+    
+    if(splitMessage[0].toLowerCase() == bugTag.toLowerCase()){
+      var type = splitMessage[0];
+      var id = splitMessage[1];
+      
+      splitMessage.shift();
+      splitMessage.shift();
+      var message = splitMessage.join(" ");
+      bug.push(new Array(type, id, message, log.author));
+    }
+
+    if(bugTag.toLowerCase() == "b" && splitMessage[0].toLowerCase() == "cb"){
+      var type = splitMessage[0];
+      var id = splitMessage[1];
+      
+      splitMessage.shift();
+      splitMessage.shift();
+      var message = splitMessage.join(" ");
+      bug.push(new Array(type, id, message, log.author));
+    }
+    
+  }
+  return new Array(feature, bug);
+}
+
+
+async function parseLogsJsonMultiTagsVersion(logs){
   var feature = new Array();
   var bug = new Array();
 
