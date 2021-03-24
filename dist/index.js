@@ -29,9 +29,11 @@ async function main() {
     //log this for debugging purposes
     console.log(`latest tag: ${latestRelease}`);
     console.log(`The logs: ${logs}`);
+    console.log(`The changeLogs: ${changeLogs}`);
 
     core.setOutput('latest_tag', latestRelease);
     core.setOutput('logs-on-json', logs);
+    core.setOutput('change-logs', changeLogs);
   } catch (error) {
     core.setFailed(error.message);
   }  
