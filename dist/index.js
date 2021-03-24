@@ -25,7 +25,7 @@ async function main() {
     const payload = JSON.stringify(github.context.payload, undefined, 2);
 
 
-    const format = ' --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN <%aE>",%n  "date": "%ad",%n  "message": "%f"%n}, ';
+    const format = ' --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN <%aE>",%n  "date": "%ad",%n  "message": "%f"%n}, \'';
     const endPart =  " $@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' |     perl -pe 's/},]/}]/' ";
     
 
