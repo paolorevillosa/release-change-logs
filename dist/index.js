@@ -49,7 +49,7 @@ async function parseLogsJson(logs){
   var feature = new Array();
   var bug = new Array();
 
-  var parsedJSON = JSON.parse(data);
+  var parsedJSON = JSON.parse(logs);
   for( let num in parsedJSON ){
     var log = parsedJSON[num];
     var message = log.message;
