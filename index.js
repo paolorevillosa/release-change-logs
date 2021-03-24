@@ -12,7 +12,7 @@ async function main() {
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
-    const latestRelease = await exec('git describe --tags --abbrev=0');
+    const latestRelease = 'v3';//await exec('git describe --tags --abbrev=0');
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;  
     const logs = await exec(logScript)
     const parsedLogs = await parseLogsJson(logs);
@@ -83,7 +83,7 @@ async function generatedChangeLogs(data){
 
     for (let i = 0; i < feature.length; i++) {
 
-      changeLogMessage += "\n* " + feature[i][3] + feature[i][4]
+      changeLogMessage += "\n* " + feature[i][2] + feature[i][3]
     }
   }
 
@@ -94,7 +94,7 @@ async function generatedChangeLogs(data){
 
     for (let i = 0; i < bugs.length; i++) {
 
-      changeLogMessage += "\n * " + bugs[i][3] + bugs[i][4]
+      changeLogMessage += "\n * " + bugs[i][2] + bugs[i][3]
     }
   }
 
