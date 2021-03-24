@@ -55,7 +55,7 @@ async function parseLogsJson(logs){
       splitMessage.shift();
       splitMessage.shift();
       var message = splitMessage.join(" ");
-      feature.push(new Array(type, id, message, log));
+      feature.push(new Array(type, id, message, log.author));
     }
     
     if(splitMessage[0] == "b"){
@@ -65,7 +65,7 @@ async function parseLogsJson(logs){
       splitMessage.shift();
       splitMessage.shift();
       var message = splitMessage.join(" ");
-      bug.push(new Array(type, id, message, log));
+      bug.push(new Array(type, id, message, log.author));
     }
     
   }
@@ -83,7 +83,7 @@ async function generatedChangeLogs(data){
 
     for (let i = 0; i < feature.length; i++) {
 
-      changeLogMessage += "<br/>* " + feature[0] + feature[4].author
+      changeLogMessage += "<br/>* " + feature[0] + feature[4]
     }
   }
 
@@ -94,7 +94,7 @@ async function generatedChangeLogs(data){
 
     for (let i = 0; i < bugs.length; i++) {
 
-      changeLogMessage += "<br/> * " + bugs[0] + bugs[4].author
+      changeLogMessage += "<br/> * " + bugs[0] + bugs[4]
     }
   }
 
