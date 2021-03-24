@@ -1,7 +1,5 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const exec = require('@actions/exec');
-
 const child_process = require('child_process');
 const util = require('util');
 
@@ -9,35 +7,42 @@ const util = require('util');
 async function main() {
 
   try {
-    // `who-to-greet` input defined in action metadata file
-    const nameToGreet = core.getInput('who-to-greet');
-    console.log(`Hello ${nameToGreet}!`);
-    const time = (new Date()).toTimeString();
-    core.setOutput("time", time);
-    // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2);
-
-
-    const format = ' --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN <%aE>",%n  "date": "%ad",%n  "message": "%f"%n}, \'';
-    const endPart =  " $@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' |     perl -pe 's/},]/}]/' ";
+    //define git log script for easy debuggin, this will return data as json file
+    const format = ' --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN",%n  "date": "%ad",%n  "message": "%f"%n}, \'';
+    const endPart =  "$@ |     perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' |     perl -pe 's/},]/}]/'";
     
-
-    const latestRelease = await exec2('git describe --tags --abbrev=0');
+    //get latest tag
+    const latestRelease = await exec('git describe --tags --abbrev=0');
     console.log(`latest tag: ${latestRelease}`);
-    const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
+    core.setOutput('latest_tag', latestRelease);
 
-    console.log(`logScript: ${logScript}`);
-    const logs = await exec2(logScript)
+
+    const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;  
+    const logs = await exec(logScript)
+
     console.log(`The logs: ${logs}`);
+    core.setOutput('logs-on-json', logs);
   } catch (error) {
     core.setFailed(error.message);
   }  
 }
 
-async function exec2(command) {
+async function exec(command) {
       const { stdout, stderr } = await util.promisify(child_process.exec)(command)
       if (stderr) console.error(stderr)
       return stdout.trim();
+}
+
+async function generateChangeLogs(logs){
+  var feature = new Array();
+  var bugs = new Array(); 
+
+  var parsedJSON = JSON.parse(logs);
+  for( let log in parsedJSON ){
+    console.lo;
+
+  }
+
 }
 
 main();
