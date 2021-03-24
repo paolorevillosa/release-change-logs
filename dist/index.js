@@ -11,15 +11,21 @@ const child_process = __nccwpck_require__(129);
 const util = __nccwpck_require__(669);
 
 
+let featureTag = "FEATURE";
+let bugTag = "BUGFIX";
+
 async function main() {
 
   try {
+    setupInput();
+
+
     //define git log script for easy debuggin, this will return data as json file
     const format = ' --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN",%n  "date": "%ad",%n  "message": "%f"%n},\'';
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
-    const latestRelease = await exec('git describe --tags --abbrev=0');
+    const latestRelease = 'v3';//await exec('git describe --tags --abbrev=0');
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;  
     const logs = await exec(logScript)
     const parsedLogs = await parseLogsJson(logs);
@@ -39,6 +45,18 @@ async function main() {
   }  
 }
 
+
+function setupInput(){
+  if (!!core.getInput('feature')) {
+    featureTag = core.getInput('feature')
+  }
+
+  if (!!core.getInput('bugs')) {
+    bugTag = core.getInput('bugs')
+  }
+}
+
+
 async function exec(command) {
       const { stdout, stderr } = await util.promisify(child_process.exec)(command)
       if (stderr) console.error(stderr)
@@ -55,7 +73,7 @@ async function parseLogsJson(logs){
     var message = log.message;
     
     var splitMessage = message.split("-");
-    if(splitMessage[0] == "t"){
+    if(splitMessage[0].toLowerCase() == featureTag.toLowerCase()){
       var type = splitMessage[0];
       var id = splitMessage[1];
       
@@ -65,7 +83,7 @@ async function parseLogsJson(logs){
       feature.push(new Array(type, id, message, log.author));
     }
     
-    if(splitMessage[0] == "b"){
+    if(splitMessage[0].toLowerCase() == bugTag.toLowerCase()){
       var type = splitMessage[0];
       var id = splitMessage[1];
       
