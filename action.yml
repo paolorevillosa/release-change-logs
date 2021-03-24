@@ -1,13 +1,21 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Release Change Logs'
+description: 'Genereate commit logs from last released/tag to HEAD'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
+  feature:  # id of input
+    description: 'prefix message for feature commits'
+    required: false
+    default: 'FEATURE'
+  bugs:  # id of input
+    description: 'prefix message for bugfix commits'
+    required: false
+    default: 'BUGFIX'
 outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  latest_tag: # id of output
+    description: 'Latest Tag'
+  logs-on-json: # id of output
+    description: 'commit logs on json format'
+  change-logs: # id of output
+    description: 'change logs based on commit messages used for release messages'
 runs:
   using: 'node12'
   main: 'dist/index.js'

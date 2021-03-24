@@ -1,12 +1,16 @@
-# Hello world javascript action
+# Release Change Logs javascript action
 
-This action prints "Hello World" or "Hello" + the name of a person to greet to the log.
+This action will generate commit logs based on latest tag to HEAD
 
 ## Inputs
 
-### `who-to-greet`
+### `feature`
 
-**Required** The name of the person to greet. Default `"World"`.
+**Optional** prefix message for feature commits. Add value here to define your custom prefix. Default `"FEATURE"`.
+
+### `bugs`
+
+**Optional** prefix message for feature commits. Add value here to define your custom prefix Default `"BUGFIX"`.
 
 ## Outputs
 
