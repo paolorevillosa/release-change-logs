@@ -86,22 +86,22 @@ async function generatedChangeLogs(data){
   var changeLogMessage = "## What’s New";
 
   if(feature.length > 0){
-    changeLogMessage += "\ ### Features";
+    changeLogMessage += "<br/>### Features";
 
     for (let i = 0; i < feature.length; i++) {
 
-      changeLogMessage += "\ * " + feature[0] + feature[4].author
+      changeLogMessage += "<br/>* " + feature[0] + feature[4].author
     }
   }
 
 
   if(bugs.length > 0){
-    changeLogMessage += "\ ";
-    changeLogMessage += "\ ### BugFixes";
+    changeLogMessage += "<br/>";
+    changeLogMessage += "<br/> ### BugFixes";
 
     for (let i = 0; i < bugs.length; i++) {
 
-      changeLogMessage += "\ * " + bugs[0] + bugs[4].author
+      changeLogMessage += "<br/> * " + bugs[0] + bugs[4].author
     }
   }
 
