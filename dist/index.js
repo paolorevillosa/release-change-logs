@@ -15,8 +15,8 @@ async function main() {
 
   try {
     //define git log script for easy debuggin, this will return data as json file
-    const format = ' --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN",%n  "date": "%ad",%n  "message": "%f"%n}, \'';
-    const endPart =  "$@ |     perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' |     perl -pe 's/},]/}]/'";
+    const format = ' --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN",%n  "date": "%ad",%n  "message": "%f"%n},\'';
+    const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
     const latestRelease = await exec('git describe --tags --abbrev=0');
