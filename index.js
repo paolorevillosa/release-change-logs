@@ -6,7 +6,7 @@ const util = require('util');
 
 let featureTag = "FEATURE";
 let bugTag = "BUGFIX";
-let tags = ["FEATURE","Bugfixes"];
+let tags = ["Feature","Bugfixes"];
 
 async function main() {
 
@@ -19,7 +19,7 @@ async function main() {
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
-    const latestRelease = await exec('git describe --tags --abbrev=0'); 
+    const latestRelease = 'v3';//await exec('git describe --tags --abbrev=0'); 
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;  
     const logs = await exec(logScript)
     const parsedLogs = await parseLogsJson(logs);
@@ -103,8 +103,11 @@ async function parseLogsJson(logs){
 
 
 async function parseLogsJsonMultiTagsVersion(logs){
-  var feature = new Array();
-  var bug = new Array();
+  var tags = new Array();
+
+  for (let i = 0; i < tags.length; i++) {
+    tags[tags[i]] = new Array();
+  }
 
   var parsedJSON = JSON.parse(logs);
   for( let num in parsedJSON ){
@@ -121,19 +124,8 @@ async function parseLogsJsonMultiTagsVersion(logs){
       var message = splitMessage.join(" ");
       feature.push(new Array(type, id, message, log.author));
     }
-    
-    if(splitMessage[0].toLowerCase() == bugTag.toLowerCase()){
-      var type = splitMessage[0];
-      var id = splitMessage[1];
-      
-      splitMessage.shift();
-      splitMessage.shift();
-      var message = splitMessage.join(" ");
-      bug.push(new Array(type, id, message, log.author));
-    }
-    
+
   }
-  return new Array(feature, bug);
 }
 
 async function generatedChangeLogs(data){
