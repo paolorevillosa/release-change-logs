@@ -27,10 +27,12 @@ async function main() {
     
     //get latest tag
     const latestRelease = 'v3';//await exec('git describe --tags --abbrev=0'); 
-    const logScript = "git log " + latestRelease + "..HEAD " + format + endPart + " > logs.txt";
+    const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
     const logs = await exec(logScript)
     const parsedLogs = await parseLogsJson(logs);
     const changeLogs = await generatedChangeLogs(parsedLogs);
+
+    await exec(logScript + " > logs.txt");
 
 
     //log this for debugging purposes
