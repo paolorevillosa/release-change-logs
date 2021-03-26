@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Click the button to display a String version of the array.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var logs = "[{\"message\":\"t-12-test\"}, {\"message\":\"b-13-test\"}]";
+  var tags = ["t", "b", "Apple", "Mango"];
+  var tg = new Array();
+
+  for (let i = 0; i < tags.length; i++) {
+    tg[tags[i]] = new Array();
+  }
+
+  var parsedJSON = JSON.parse(logs);
+  for( let num in parsedJSON ){
+    var log = parsedJSON[num];
+    var message = log.message;
+    
+    var splitMessage = message.split("-");
+    var type = splitMessage[0];
+    var id = splitMessage[1];
+    
+    splitMessage.shift();
+    splitMessage.shift();
+    var message = splitMessage.join(" ");
+    tg[type].push(new Array(type, id, message, log.author));
+
+  }
+  console.log(tg);
+  
+  tg.forEach(function (value, index) {
+      console.log(`Element ${value} found at index ${index}`);
+  });
+
+  
+  var changeLogMessage = "## What’s New";
+  //console.log(tg['b']);
+  
+
+  for (let i = 0; i < tg.length; i++) {
+    let logsArray = tg[i];
+    console.log(logsArray);
+    for (let i2 = 0; i < logsArray.length; i2++) {
+      
+      changeLogMessage += "\n* " + logsArray[i2][2] + " @" + logsArray[i2][3];
+    }
+  }
+  
+  x = JSON.stringify(tg);
+
+  document.getElementById("demo").innerHTML = changeLogMessage;
+}
+</script>
+
+</body>
+</html>
