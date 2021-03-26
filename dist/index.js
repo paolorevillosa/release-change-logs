@@ -22,12 +22,12 @@ async function main() {
 
 
     //define git log script for easy debuggin, this will return data as json file
-    const format = ' --pretty=format:\'{%n  "commit": "%H",%n  "author": "%aN",%n  "date": "%ad",%n  "message": "%f"%n},\'';
-    const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\n\"}' | perl -pe 's/},]/}]/'";
+    const format = ' --pretty=format:\'{"commit": "%H","author": "%aN","date": "%ad","message": "%f"},\'';
+    const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
     const latestRelease = 'v3';//await exec('git describe --tags --abbrev=0'); 
-    const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;  
+    const logScript = "git log " + latestRelease + "..HEAD " + format + endPart + " > logs.txt";
     const logs = await exec(logScript)
     const parsedLogs = await parseLogsJson(logs);
     const changeLogs = await generatedChangeLogs(parsedLogs);
