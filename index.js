@@ -3,10 +3,8 @@ const github = require('@actions/github');
 const child_process = require('child_process');
 const util = require('util');
 
-
-let featureTag = "FEATURE";
-let bugTag = "BUGFIX";
-let tags = ["Feature","Bugfixes"];
+let tags = {feature:'Feature', bugfixes:'Bugfixes'};
+var chageLogTags = new Array();
 
 async function main() {
 
@@ -44,13 +42,9 @@ async function main() {
 
 
 function setupInput(){
-  if (!!core.getInput('feature')) {
-    featureTag = core.getInput('feature')
-  }
-
-  if (!!core.getInput('bugs')) {
-    bugTag = core.getInput('bugs')
-  }
+  for (let key in tags){
+      chageLogTags[key] = new Array();
+  };
 }
 
 
@@ -102,33 +96,6 @@ async function parseLogsJson(logs){
     
   }
   return new Array(feature, bug);
-}
-
-
-async function parseLogsJsonMultiTagsVersion(logs){
-  var tags = new Array();
-
-  for (let i = 0; i < tags.length; i++) {
-    tags[tags[i]] = new Array();
-  }
-
-  var parsedJSON = JSON.parse(logs);
-  for( let num in parsedJSON ){
-    var log = parsedJSON[num];
-    var message = log.message;
-    
-    var splitMessage = message.split("-");
-    if(splitMessage[0].toLowerCase() == featureTag.toLowerCase()){
-      var type = splitMessage[0];
-      var id = splitMessage[1];
-      
-      splitMessage.shift();
-      splitMessage.shift();
-      var message = splitMessage.join(" ");
-      feature.push(new Array(type, id, message, log.author));
-    }
-
-  }
 }
 
 async function generatedChangeLogs(data){
