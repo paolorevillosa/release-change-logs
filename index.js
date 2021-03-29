@@ -36,7 +36,7 @@ async function main() {
     core.setOutput('latest_tag', latestRelease);
     core.setOutput('logs-on-json', logs);
     core.setOutput('change-logs', changeLogs);
-    core.setOutput('logs-on-text-file', "log.txt");
+    core.setOutput('logs-on-text-file', "logs.txt");
   } catch (error) {
     core.setFailed(error.message);
   }  
