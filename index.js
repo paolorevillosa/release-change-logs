@@ -77,7 +77,7 @@ async function parseLogsJson(logs){
       splitMessage.shift();
       splitMessage.shift();
       var message = splitMessage.join(" ");
-      feature.push(new Array(type, id, message, log.author));
+      feature.push(new Array(type, id, message, log.author, log.original_message));
     }
     
     if(splitMessage[0].toLowerCase() == bugTag.toLowerCase()){
@@ -87,7 +87,7 @@ async function parseLogsJson(logs){
       splitMessage.shift();
       splitMessage.shift();
       var message = splitMessage.join(" ");
-      bug.push(new Array(type, id, message, log.author));
+      bug.push(new Array(type, id, message, log.author, log.original_message));
     }
 
     if(bugTag.toLowerCase() == "b" && splitMessage[0].toLowerCase() == "cb"){
@@ -97,7 +97,7 @@ async function parseLogsJson(logs){
       splitMessage.shift();
       splitMessage.shift();
       var message = splitMessage.join(" ");
-      bug.push(new Array(type, id, message, log.author));
+      bug.push(new Array(type, id, message, log.author, log.original_message));
     }
     
   }
@@ -142,7 +142,7 @@ async function generatedChangeLogs(data){
 
     for (let i = 0; i < feature.length; i++) {
 
-      changeLogMessage += "\n* " + feature[i][2] + " @" + feature[i][3]
+      changeLogMessage += "\n* " + feature[i][4] + " (@" + bugs[i][3] + ")"
     }
   }
 
@@ -153,7 +153,7 @@ async function generatedChangeLogs(data){
 
     for (let i = 0; i < bugs.length; i++) {
 
-      changeLogMessage += "\n * " + bugs[i][2] + " @" + bugs[i][3]
+      changeLogMessage += "\n* " + feature[i][4] + " (@" + bugs[i][3] + ")"
     }
   }
 
