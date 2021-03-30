@@ -15,11 +15,11 @@ async function main() {
 
 
     //define git log script for easy debuggin, this will return data as json file
-    const format = ' --pretty=format:\'{"commit": "%H","author": "%aN","date": "%ad","message": "%f"},\'';
+    const format = ' --pretty=format:\'{"commit": "%H","author": "%aN","date": "%ad","message": "%f", "original_message": "%s"},\'';
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
-    const latestRelease = await exec('git describe --tags --abbrev=0'); 
+    const latestRelease = 'v3';//await exec('git describe --tags --abbrev=0'); 
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
     const logs = await exec(logScript)
     const parsedLogs = await parseLogsJson(logs);
@@ -36,7 +36,7 @@ async function main() {
     core.setOutput('latest_tag', latestRelease);
     core.setOutput('logs-on-json', logs);
     core.setOutput('change-logs', changeLogs);
-    core.setOutput('logs-on-text-file', "log.txt");
+    core.setOutput('logs-on-text-file', "logs.txt");
   } catch (error) {
     core.setFailed(error.message);
   }  
@@ -87,7 +87,7 @@ async function parseLogsJson(logs){
       splitMessage.shift();
       splitMessage.shift();
       var message = splitMessage.join(" ");
-      bug.push(new Array(type, id, message, log.author));
+      bug.push(new Array(type, id, message, log.author, log.original_message));
     }
 
     if(bugTag.toLowerCase() == "b" && splitMessage[0].toLowerCase() == "cb"){
@@ -97,7 +97,7 @@ async function parseLogsJson(logs){
       splitMessage.shift();
       splitMessage.shift();
       var message = splitMessage.join(" ");
-      bug.push(new Array(type, id, message, log.author));
+      bug.push(new Array(type, id, message, log.author, log.original_message));
     }
     
   }
@@ -142,7 +142,7 @@ async function generatedChangeLogs(data){
 
     for (let i = 0; i < feature.length; i++) {
 
-      changeLogMessage += "\n* " + feature[i][2] + " @" + feature[i][3]
+      changeLogMessage += "\n* " + feature[i][4] + " (@" + bugs[i][3] + ")"
     }
   }
 
@@ -153,7 +153,7 @@ async function generatedChangeLogs(data){
 
     for (let i = 0; i < bugs.length; i++) {
 
-      changeLogMessage += "\n * " + bugs[i][2] + " @" + bugs[i][3]
+      changeLogMessage += "\n * " + bugs[i][4] + " (@" + bugs[i][3] + ")"
     }
   }
 
@@ -161,5 +161,3 @@ async function generatedChangeLogs(data){
 }
 
 main();
-
-
