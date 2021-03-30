@@ -23,7 +23,7 @@ async function main() {
     console.log(`latest tag: ${latestRelease}`);
 
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
-    console.log(`The logs: ${logs}`);
+    console.log(`The logs: ${logScript}`);
 
     const logs = await exec(logScript);
     console.log(`The changeLogs: ${logs}`);
