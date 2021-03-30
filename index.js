@@ -142,7 +142,7 @@ async function generatedChangeLogs(data){
 
     for (let i = 0; i < feature.length; i++) {
 
-      changeLogMessage += "\n* " + feature[i][4] + " (@" + bugs[i][3] + ")"
+      changeLogMessage += "\n* " + feature[i][4] + " (@" + feature[i][3] + ")"
     }
   }
 
@@ -153,7 +153,7 @@ async function generatedChangeLogs(data){
 
     for (let i = 0; i < bugs.length; i++) {
 
-      changeLogMessage += "\n* " + feature[i][4] + " (@" + bugs[i][3] + ")"
+      changeLogMessage += "\n* " + bugs[i][4] + " (@" + bugs[i][3] + ")"
     }
   }
 
