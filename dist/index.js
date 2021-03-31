@@ -26,7 +26,7 @@ async function main() {
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
-    const latestRelease = 'v3';//await exec('git describe --tags --abbrev=0'); 
+    const latestRelease = await exec('git describe --tags --abbrev=0'); 
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
     const logs = await exec(logScript)
     const parsedLogs = await parseLogsJson(logs);
