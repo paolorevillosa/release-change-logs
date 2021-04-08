@@ -85,6 +85,7 @@ async function parseLogsJson(logs){
       splitMessage.shift();
       var message = splitMessage.join(" ");
       feature.push(new Array(type, id, message, log.author, log.original_message));
+      continue;
     }
     
     if(splitMessage[0].toLowerCase() == bugTag.toLowerCase()){
@@ -95,6 +96,7 @@ async function parseLogsJson(logs){
       splitMessage.shift();
       var message = splitMessage.join(" ");
       bug.push(new Array(type, id, message, log.author, log.original_message));
+      continue;
     }
 
     if(bugTag.toLowerCase() == "b" && splitMessage[0].toLowerCase() == "cb"){
@@ -105,6 +107,7 @@ async function parseLogsJson(logs){
       splitMessage.shift();
       var message = splitMessage.join(" ");
       bug.push(new Array(type, id, message, log.author, log.original_message));
+      continue;
     }
     
   }
