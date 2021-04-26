@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html>
-<body>
-
+<body> 
 <p>Click the button to display a String version of the array.</p>
 
 <button onclick="myFunction()">Try it</button>
@@ -10,13 +8,17 @@
 
 <script>
 function myFunction() {
-  var logs = "[{\"message\":\"t-12-test\"}, {\"message\":\"b-13-test\"}]";
-  var tags = ["t", "b", "Apple", "Mango"];
-  var tg = new Array();
+  var logs = "[{\"commit\": \"36298b32f790bc74f1fd05844945fabd92a768a3\",\"author\": \"Rj Rodriguez\",\"date\": \"Thu Apr 8 18:11:02 2021 +0800\",\"message\": \"B-2345\", \"original_message\": \"[B][2345] Added functionality\"},{\"commit\": \"b323ef3321c460575ed2ab214a53463c9bb21fa7\",\"author\": \"Rj Rodriguez\",\"date\": \"Thu Apr 8 18:10:23 2021 +0800\",\"message\": \"Merge-pull-request-1682-from-Migs-Engagia-task-2345-AccountProductAssignment\", \"original_message\": \"Merge pull request #1682 from Migs-Engagia/task/2345/AccountProductAssignment\"},{\"commit\": \"30362ba6d188f9274e4599ffaaecdf1233776e29\",\"author\": \"rodriguezrj14\",\"date\": \"Tue Mar 30 10:44:13 2021 +0800\",\"message\": \"T-2345\", \"original_message\": \"[T][2345]\"}]";
+  
 
-  for (let i = 0; i < tags.length; i++) {
-    tg[tags[i]] = new Array();
-  }
+  var tags = {t:'Feature', B:'Bugfixes'};
+  var chageLogTags = new Array();
+  
+  for (let key in tags){
+      //set data to lower case to avoid issue regarding data
+      chageLogTags[key.toLowerCase()] = new Array();
+      tags[key.toLowerCase()] = tags[key];
+  };
 
   var parsedJSON = JSON.parse(logs);
   for( let num in parsedJSON ){
@@ -26,36 +28,28 @@ function myFunction() {
     var splitMessage = message.split("-");
     var type = splitMessage[0];
     var id = splitMessage[1];
-    
-    splitMessage.shift();
-    splitMessage.shift();
-    var message = splitMessage.join(" ");
-    tg[type].push(new Array(type, id, message, log.author));
 
-  }
-  console.log(tg);
-  
-  tg.forEach(function (value, index) {
-      console.log(`Element ${value} found at index ${index}`);
-  });
-
-  
-  var changeLogMessage = "## What’s New";
-  //console.log(tg['b']);
-  
-
-  for (let i = 0; i < tg.length; i++) {
-    let logsArray = tg[i];
-    console.log(logsArray);
-    for (let i2 = 0; i < logsArray.length; i2++) {
-      
-      changeLogMessage += "\n* " + logsArray[i2][2] + " @" + logsArray[i2][3];
+    if(chageLogTags[type.toLowerCase()] !== undefined){
+      chageLogTags[type.toLowerCase()].push(new Array(type, id, message, log.author, log.original_message ));  
     }
   }
-  
-  x = JSON.stringify(tg);
 
-  document.getElementById("demo").innerHTML = changeLogMessage;
+  var changeLogMessage = "## What’s New\n";
+  for (let key in chageLogTags){
+
+      var data = chageLogTags[key];
+      for (let i = 0; i < data.length; i++) {
+        if(i ==0){
+            changeLogMessage += "\n" + tags[key];
+        }
+
+        changeLogMessage += "\n* " + data[i][4] + " (@" + data[i][3] + ")"
+      }
+      changeLogMessage += "\n";
+  };
+
+
+  console.log(changeLogMessage);
 }
 </script>
 

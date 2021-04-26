@@ -3,50 +3,46 @@ const github = require('@actions/github');
 const child_process = require('child_process');
 const util = require('util');
 
-let tags = {feature:'Feature', bugfixes:'Bugfixes'};
+let tags = {feature:'Feature', bugfixes:'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
+var changeLogMessage = "## What’s New\n";
 
 async function main() {
 
   try {
-    setupInput();
-
+    //setup commit prefix tags
+    for (let key in tags){
+      //set data to lower case to avoid issue regarding data
+      chageLogTags[key.toLowerCase()] = new Array();
+      tags[key.toLowerCase()] = tags[key];
+    };
 
     //define git log script for easy debuggin, this will return data as json file
-    const format = ' --pretty=format:\'{"commit": "%H","author": "%aN","date": "%ad","message": "%f"},\'';
+    const format = ' --pretty=format:\'{"commit": "%H","author": "%aN","date": "%ad","message": "%f", "original_message": "%s"},\'';
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
     const latestRelease = await exec('git describe --tags --abbrev=0'); 
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
     const logs = await exec(logScript)
-    const parsedLogs = await parseLogsJson(logs);
-    const changeLogs = await generatedChangeLogs(parsedLogs);
-
+    
+    await parseData(logs);
     await exec(logScript + " > logs.txt");
 
 
     //log this for debugging purposes
     console.log(`latest tag: ${latestRelease}`);
     console.log(`The logs: ${logs}`);
-    console.log(`The changeLogs: ${changeLogs}`);
+    console.log(`The changeLogs: ${changeLogMessage}`);
 
     core.setOutput('latest_tag', latestRelease);
     core.setOutput('logs-on-json', logs);
-    core.setOutput('change-logs', changeLogs);
+    core.setOutput('change-logs', changeLogMessage);
     core.setOutput('logs-on-text-file', "log.txt");
   } catch (error) {
     core.setFailed(error.message);
   }  
 }
-
-
-function setupInput(){
-  for (let key in tags){
-      chageLogTags[key] = new Array();
-  };
-}
-
 
 async function exec(command) {
       const { stdout, stderr } = await util.promisify(child_process.exec)(command)
@@ -54,77 +50,40 @@ async function exec(command) {
       return stdout.trim();
 }
 
-async function parseLogsJson(logs){
-  var feature = new Array();
-  var bug = new Array();
 
+/**
+ * Will parse json based on tags provided
+ * and will generate change logs
+ *
+ * @param String logs
+ */
+async function parseData(logs){
   var parsedJSON = JSON.parse(logs);
   for( let num in parsedJSON ){
     var log = parsedJSON[num];
     var message = log.message;
     
     var splitMessage = message.split("-");
-    if(splitMessage[0].toLowerCase() == featureTag.toLowerCase()){
-      var type = splitMessage[0];
-      var id = splitMessage[1];
-      
-      splitMessage.shift();
-      splitMessage.shift();
-      var message = splitMessage.join(" ");
-      feature.push(new Array(type, id, message, log.author));
-    }
-    
-    if(splitMessage[0].toLowerCase() == bugTag.toLowerCase()){
-      var type = splitMessage[0];
-      var id = splitMessage[1];
-      
-      splitMessage.shift();
-      splitMessage.shift();
-      var message = splitMessage.join(" ");
-      bug.push(new Array(type, id, message, log.author));
-    }
+    var type = splitMessage[0];
+    var id = splitMessage[1];
 
-    if(bugTag.toLowerCase() == "b" && splitMessage[0].toLowerCase() == "cb"){
-      var type = splitMessage[0];
-      var id = splitMessage[1];
-      
-      splitMessage.shift();
-      splitMessage.shift();
-      var message = splitMessage.join(" ");
-      bug.push(new Array(type, id, message, log.author));
-    }
-    
-  }
-  return new Array(feature, bug);
-}
-
-async function generatedChangeLogs(data){
-  let feature = data[0];
-  let bugs = data[1];
-
-  var changeLogMessage = "## What’s New";
-
-  if(feature.length > 0){
-    changeLogMessage += "\n\n### Features";
-
-    for (let i = 0; i < feature.length; i++) {
-
-      changeLogMessage += "\n* " + feature[i][2] + " @" + feature[i][3]
+    if(chageLogTags[type.toLowerCase()] !== undefined){
+      chageLogTags[type.toLowerCase()].push(new Array(type, id, message, log.author, log.original_message ));  
     }
   }
 
+  for (let key in chageLogTags){
 
-  if(bugs.length > 0){
-    changeLogMessage += "\n";
-    changeLogMessage += "\n ### BugFixes";
+      var data = chageLogTags[key];
+      for (let i = 0; i < data.length; i++) {
+        if(i ==0){
+            changeLogMessage += "\n" + tags[key];
+        }
 
-    for (let i = 0; i < bugs.length; i++) {
-
-      changeLogMessage += "\n * " + bugs[i][2] + " @" + bugs[i][3]
-    }
-  }
-
-  return changeLogMessage;
+        changeLogMessage += "\n* " + data[i][4] + " (@" + data[i][3] + ")"
+      }
+      changeLogMessage += "\n";
+  };
 }
 
 main();
