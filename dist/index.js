@@ -10,7 +10,7 @@ const github = __nccwpck_require__(134);
 const child_process = __nccwpck_require__(129);
 const util = __nccwpck_require__(669);
 
-let tags = {feature:'Feature', bugfixes:'Bugfixes'}; //default commit tags
+let tags = {"feature":'Feature', "bugfixes":'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
 var changeLogMessage = "## What’s New\n";
 
@@ -63,7 +63,7 @@ async function exec(command) {
 
 function setupInput(){
   if (!!core.getInput('custom_tags')) {
-    tags = core.getInput('custom_tags')
+    tags = JSON.parse(core.getInput('custom_tags'));
   }
 }
 

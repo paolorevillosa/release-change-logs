@@ -13,6 +13,8 @@ var changeLogMessage = "## What’s New\n";
 
 function myFunction() {
   console.log(tags);
+  tags = JSON.parse('{"T":"Feature", "B":"Bugfixes"}');
+  console.log(tags);
   var logs = "[{\"commit\": \"36298b32f790bc74f1fd05844945fabd92a768a3\",\"author\": \"Rj Rodriguez\",\"date\": \"Thu Apr 8 18:11:02 2021 +0800\",\"message\": \"B-2345\", \"original_message\": \"[B][2345] Added functionality\"},{\"commit\": \"b323ef3321c460575ed2ab214a53463c9bb21fa7\",\"author\": \"Rj Rodriguez\",\"date\": \"Thu Apr 8 18:10:23 2021 +0800\",\"message\": \"Merge-pull-request-1682-from-Migs-Engagia-task-2345-AccountProductAssignment\", \"original_message\": \"Merge pull request #1682 from Migs-Engagia/task/2345/AccountProductAssignment\"},{\"commit\": \"30362ba6d188f9274e4599ffaaecdf1233776e29\",\"author\": \"rodriguezrj14\",\"date\": \"Tue Mar 30 10:44:13 2021 +0800\",\"message\": \"T-2345\", \"original_message\": \"[T][2345]\"}]";
   //var tags = {t:'Feature', B:'Bugfixes'};
   //var chageLogTags = new Array();
@@ -22,6 +24,7 @@ function myFunction() {
       chageLogTags[key.toLowerCase()] = new Array();
       tags[key.toLowerCase()] = tags[key];
   };
+  console.log(chageLogTags);
 
   
 

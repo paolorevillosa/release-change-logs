@@ -3,7 +3,7 @@ const github = require('@actions/github');
 const child_process = require('child_process');
 const util = require('util');
 
-let tags = {feature:'Feature', bugfixes:'Bugfixes'}; //default commit tags
+let tags = {"feature":'Feature', "bugfixes":'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
 var changeLogMessage = "## What’s New\n";
 
@@ -56,7 +56,7 @@ async function exec(command) {
 
 function setupInput(){
   if (!!core.getInput('custom_tags')) {
-    tags = core.getInput('custom_tags')
+    tags = JSON.parse(core.getInput('custom_tags'));
   }
 }
 
