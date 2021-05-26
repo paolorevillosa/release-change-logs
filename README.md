@@ -1,25 +1,30 @@
-# Release Change Logs javascript action
+# Release Notes Logs javascript action
 
-This action will generate commit logs based on latest tag to HEAD
+**Create Release Notes from GitHub Actions.** This action will generate release notes for your release base on latest tag to HEAD
 
-## Inputs
+### Example
+```yaml
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy Stage
+      uses: paolorevillosa/release-change-logs@master
+      with:
+        custom_tag: '{"b":"Bugfix","f": "Feature Added"}'
+```
 
-### `feature`
 
-**Optional** prefix message for feature commits. Add value here to define your custom prefix. Default `"FEATURE"`.
+### Inputs
+|Argument|  Description  |  Default  |
+|--------|---------------|-----------|
+custom_tag|Commit Message prefix to find |{"bugfix":"Bugfix","feature": "Features"}
 
-### `bugs`
 
-**Optional** prefix message for feature commits. Add value here to define your custom prefix Default `"BUGFIX"`.
-
-## Outputs
-
-### `time`
-
-The time we greeted you.
-
-## Example usage
-
-uses: actions/hello-world-javascript-action@v1.1
-with:
-  who-to-greet: 'Mona the Octocat'
+### Response
+| Variable |  Description  |
+|---|---|
+change-logs | Generated Change logs
+latest_tag| Latest Tag based on released
+logs-on-json | Git log on json format
+logs-on-text-file | git log on json format in a text file
