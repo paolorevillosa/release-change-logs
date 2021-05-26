@@ -15,6 +15,9 @@ var chageLogTags = new Array();
 var changeLogMessage = "## What’s New\n";
 
 async function main() {
+  console.log(tags);
+  setupInput();
+  console.log(tags);
 
   try {
     //setup commit prefix tags
@@ -23,6 +26,7 @@ async function main() {
       chageLogTags[key.toLowerCase()] = new Array();
       tags[key.toLowerCase()] = tags[key];
     };
+    console.log(chageLogTags);
 
     //define git log script for easy debuggin, this will return data as json file
     const format = ' --pretty=format:\'{"commit": "%H","author": "%aN","date": "%ad","message": "%f", "original_message": "%s"},\'';
@@ -55,6 +59,12 @@ async function exec(command) {
       const { stdout, stderr } = await util.promisify(child_process.exec)(command)
       if (stderr) console.error(stderr)
       return stdout.trim();
+}
+
+function setupInput(){
+  if (!!core.getInput('custom_tags')) {
+    tags = core.getInput('custom_tags')
+  }
 }
 
 
