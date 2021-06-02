@@ -8,7 +8,7 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     steps:
-    - name: Deploy Stage
+    - name: Generate Release Notes
       uses: paolorevillosa/release-change-logs@master
       with:
         custom_tag: '{"b":"Bugfix","f": "Feature Added"}'
