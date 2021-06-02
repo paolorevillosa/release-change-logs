@@ -9,6 +9,10 @@ inputs:
     description: 'prefix message for bugfix commits'
     required: false
     default: 'BUGFIX'
+  custom_tags:
+    description: 'Custom tags as JSON String'
+    required: false
+    default: '{}'
 outputs:
   latest_tag: # id of output
     description: 'Latest Tag'
