@@ -27,6 +27,8 @@ async function main() {
     
     //get latest tag
     const latestRelease = await exec('git describe --tags --abbrev=0'); 
+    console.log(`latest tag: ${latestRelease}`);
+
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
     const logs = await exec(logScript)
     
