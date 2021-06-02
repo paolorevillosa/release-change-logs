@@ -28,3 +28,8 @@ change-logs | Generated Change logs
 latest_tag| Latest Tag based on released
 logs-on-json | Git log on json format
 logs-on-text-file | git log on json format in a text file
+
+
+## License
+
+[MIT](LICENSE)
