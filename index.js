@@ -87,12 +87,11 @@ async function parseData(logs){
       var data = chageLogTags[key];
       for (let i = 0; i < data.length; i++) {
         if(i ==0){
-            changeLogMessage += "\n" + tags[key];
+            changeLogMessage += "\n\n" + tags[key];
         }
 
         changeLogMessage += "\n* " + data[i][4] + " (@" + data[i][3] + ")"
       }
-      changeLogMessage += "\n";
   };
 }
 
