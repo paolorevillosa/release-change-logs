@@ -1,6 +1,6 @@
 # Release Notes Logs javascript action
 
-**Create Release Notes from GitHub Actions.** This action will generate release notes for your release base on latest tag to HEAD
+**Create Release Notes from GitHub Actions.** This action will generate release notes for your release base on latest tag to HEAD. The idea was base [here](https://blogs.sap.com/2018/06/22/generating-release-notes-from-git-commit-messages-using-basic-shell-commands-gitgrep/) and made a github actions
 
 ### Example
 ```yaml
