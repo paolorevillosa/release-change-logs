@@ -1,5 +1,8 @@
 name: 'Release Change Logs'
 description: 'Genereate commit logs from last released/tag to HEAD'
+branding:
+  icon: activity
+  color: gray-dark
 inputs:
   feature:  # id of input
     description: 'prefix message for feature commits'
