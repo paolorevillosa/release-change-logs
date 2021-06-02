@@ -34,8 +34,6 @@ async function main() {
     
     //get latest tag
     const latestRelease = await exec('git describe --tags --abbrev=0'); 
-    console.log(`latest tag: ${latestRelease}`);
-
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
     const logs = await exec(logScript)
     
@@ -47,6 +45,7 @@ async function main() {
     console.log(`latest tag: ${latestRelease}`);
     console.log(`The logs: ${logs}`);
     console.log(`The changeLogs: ${changeLogMessage}`);
+
     core.setOutput('latest_tag', latestRelease);
     core.setOutput('logs-on-json', logs);
     core.setOutput('change-logs', changeLogMessage);
