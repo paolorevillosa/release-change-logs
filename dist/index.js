@@ -97,7 +97,7 @@ async function parseData(logs){
             changeLogMessage += "\n\n ### " + tags[key];
         }
 
-        changeLogMessage += "\n* " + data[i][4] + " (@" + data[i][3] + ") " + data[i][3];
+        changeLogMessage += "\n* " + data[i][4] + " (@" + data[i][3] + ") " + data[i][5];
       }
   };
 }
