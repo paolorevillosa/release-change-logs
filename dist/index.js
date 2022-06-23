@@ -29,7 +29,7 @@ async function main() {
     console.log(chageLogTags);
 
     //define git log script for easy debuggin, this will return data as json file
-    const format = ' --pretty=format:\'{"commit": "%H","author": "%aN","date": "%ad","message": "%f", "original_message": "%s"},\'';
+    const format = ' --pretty=format:\'{"commit": "%h","author": "%aN","date": "%ad","message": "%f", "original_message": "%s"},\'';
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
@@ -85,7 +85,7 @@ async function parseData(logs){
     var id = splitMessage[1];
 
     if(chageLogTags[type.toLowerCase()] !== undefined){
-      chageLogTags[type.toLowerCase()].push(new Array(type, id, message, log.author, log.original_message ));  
+      chageLogTags[type.toLowerCase()].push(new Array(type, id, message, log.author, log.original_message, log.commit ));  
     }
   }
 
@@ -97,7 +97,7 @@ async function parseData(logs){
             changeLogMessage += "\n\n ### " + tags[key];
         }
 
-        changeLogMessage += "\n* " + data[i][4] + " (@" + data[i][3] + ")"
+        changeLogMessage += "\n* " + data[i][4] + " (@" + data[i][3] + ") " + data[i][3];
       }
   };
 }
