@@ -22,7 +22,7 @@ async function main() {
     console.log(chageLogTags);
 
     //define git log script for easy debuggin, this will return data as json file
-    const format = ' --pretty=format:\'{"commit": "%H","author": "%aN","date": "%ad","message": "%f", "original_message": "%s"},\'';
+    const format = ' --pretty=format:\'{"commit": "%h","author": "%aN","date": "%ad","message": "%f", "original_message": "%s"},\'';
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
