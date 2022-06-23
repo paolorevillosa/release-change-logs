@@ -78,7 +78,7 @@ async function parseData(logs){
     var id = splitMessage[1];
 
     if(chageLogTags[type.toLowerCase()] !== undefined){
-      chageLogTags[type.toLowerCase()].push(new Array(type, id, message, log.author, log.original_message ));  
+      chageLogTags[type.toLowerCase()].push(new Array(type, id, message, log.author, log.original_message, log.commit ));  
     }
   }
 
@@ -90,7 +90,7 @@ async function parseData(logs){
             changeLogMessage += "\n\n ### " + tags[key];
         }
 
-        changeLogMessage += "\n* " + data[i][4] + " (@" + data[i][3] + ")"
+        changeLogMessage += "\n* " + data[i][4] + " (@" + data[i][3] + ") " + data[i][3];
       }
   };
 }
