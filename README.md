@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Generate Release Notes
-      uses: paolorevillosa/release-change-logs@master
+      uses: paolorevillosa/release-change-logs@v2.2
       with:
         custom_tag: '{"b":"Bugfix","f": "Feature Added"}'
 ```
