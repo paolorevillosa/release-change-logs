@@ -24,5 +24,5 @@ outputs:
   change-logs: # id of output
     description: 'change logs based on commit messages used for release messages'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
