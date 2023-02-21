@@ -2,8 +2,6 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const child_process = require('child_process');
 const util = require('util');
-const os = require("os")
-const fs = require("fs")
 
 let tags = {"feature":'Feature', "bugfixes":'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
@@ -41,10 +39,10 @@ async function main() {
     console.log(`The logs: ${logs}`);
     console.log(`The changeLogs: ${changeLogMessage}`);
 
-    setOutput('latest_tag', latestRelease);
-    setOutput('logs-on-json', logs);
-    setOutput('change-logs', changeLogMessage);
-    setOutput('logs-on-text-file', "logs.txt");
+    core.setOutput('latest_tag', latestRelease);
+    core.setOutput('logs-on-json', logs);
+    core.setOutput('change-logs', changeLogMessage);
+    core.setOutput('logs-on-text-file', "logs.txt");
   } catch (error) {
     core.setFailed(error.message);
   }  
@@ -95,12 +93,6 @@ async function parseData(logs){
         changeLogMessage += "\n* " + data[i][4] + " (@" + data[i][3] + ") " + data[i][5];
       }
   };
-}
-
-function setOutput(key, value) {
-  // Temporary hack until core actions library catches up with github new recommendations
-  const output = process.env['GITHUB_OUTPUT']
-  fs.appendFileSync(output, `${key}=${value}${os.EOL}`)
 }
 
 main();
