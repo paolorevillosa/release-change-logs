@@ -102,6 +102,7 @@ async function parseData(logs){
   };
 }
 
+
 main();
 
 
