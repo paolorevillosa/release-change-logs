@@ -9,6 +9,8 @@ const core = __nccwpck_require__(864);
 const github = __nccwpck_require__(366);
 const child_process = __nccwpck_require__(129);
 const util = __nccwpck_require__(669);
+const os = __nccwpck_require__(87)
+const fs = __nccwpck_require__(747)
 
 let tags = {"feature":'Feature', "bugfixes":'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
@@ -52,7 +54,7 @@ async function main() {
     console.log(`The logs: ${logs}`);
     console.log(`The changeLogs: ${changeLogMessage}`);
 
-    core.setOutput(OUTPUTS.LATEST_TAG, latestRelease);
+    setOutput2(OUTPUTS.LATEST_TAG, latestRelease);
     // core.setOutput('logs-on-json', logs);
     // core.setOutput('change-logs', changeLogMessage);
     // core.setOutput('logs-on-text-file', "logs.txt");
@@ -71,6 +73,14 @@ function setupInput(){
   if (!!core.getInput('custom_tags')) {
     tags = JSON.parse(core.getInput('custom_tags'));
   }
+}
+
+
+
+function setOutput2(key, value) {
+  // Temporary hack until core actions library catches up with github new recommendations
+  const output = process.env['GITHUB_OUTPUT']
+  fs.appendFileSync(output, `${key}=${value}${os.EOL}`)
 }
 
 
