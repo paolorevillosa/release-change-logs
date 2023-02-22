@@ -8,7 +8,7 @@ var chageLogTags = new Array();
 var changeLogMessage = "## What’s New\n";
 
 const OUTPUTS = {
-  LATEST_TAG: 'latest_tag',
+  LATEST_TAG: 'LATEST_TAG',
   dockerUsername: 'docker_username',
   dockerPassword: 'docker_password'
 };
