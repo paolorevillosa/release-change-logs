@@ -1,20 +1,11 @@
 const core = require('@actions/core');
-const file_command_1 = require("@actions/lib/file-command");
 const github = require('@actions/github');
 const child_process = require('child_process');
 const util = require('util');
-const os = require("os")
-const fs = require("fs")
 
 let tags = {"feature":'Feature', "bugfixes":'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
 var changeLogMessage = "## What’s New\n";
-
-const OUTPUTS = {
-  LATEST_TAG: 'LATEST_TAG',
-  dockerUsername: 'docker_username',
-  dockerPassword: 'docker_password'
-};
 
 async function main() {
   console.log(tags);
@@ -48,10 +39,10 @@ async function main() {
     console.log(`The logs: ${logs}`);
     console.log(`The changeLogs: ${changeLogMessage}`);
 
-    setOutput3(OUTPUTS.LATEST_TAG, latestRelease);
-    // setOutput3('logs-on-json', logs);
-    setOutput3('change-logs', changeLogMessage);
-    setOutput3('logs-on-text-file', "logs.txt");
+    core.setOutput('latest_tag', latestRelease);
+    core.setOutput('logs-on-json', logs);
+    core.setOutput('change-logs', changeLogMessage);
+    core.setOutput('logs-on-text-file', "logs.txt");
   } catch (error) {
     core.setFailed(error.message);
   }  
@@ -67,23 +58,6 @@ function setupInput(){
   if (!!core.getInput('custom_tags')) {
     tags = JSON.parse(core.getInput('custom_tags'));
   }
-}
-
-
-
-function setOutput2(key, value) {
-  // Temporary hack until core actions library catches up with github new recommendations
-  const output = process.env['GITHUB_OUTPUT']
-  fs.appendFileSync(output, `${key}=${value}${os.EOL}`)
-}
-
-function setOutput3(name, value) {
-  const filePath = process.env['GITHUB_OUTPUT'] || '';
-  if (filePath) {
-      return file_command_1.issueFileCommand('OUTPUT', file_command_1.prepareKeyValueMessage(name, value));
-  }
-  process.stdout.write(os.EOL);
-  command_1.issueCommand('set-output', { name }, utils_1.toCommandValue(value));
 }
 
 

@@ -6,22 +6,13 @@ module.exports =
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(864);
-const file_command_1 = __nccwpck_require__(31);
 const github = __nccwpck_require__(366);
 const child_process = __nccwpck_require__(129);
 const util = __nccwpck_require__(669);
-const os = __nccwpck_require__(87)
-const fs = __nccwpck_require__(747)
 
 let tags = {"feature":'Feature', "bugfixes":'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
 var changeLogMessage = "## What’s New\n";
-
-const OUTPUTS = {
-  LATEST_TAG: 'LATEST_TAG',
-  dockerUsername: 'docker_username',
-  dockerPassword: 'docker_password'
-};
 
 async function main() {
   console.log(tags);
@@ -55,10 +46,10 @@ async function main() {
     console.log(`The logs: ${logs}`);
     console.log(`The changeLogs: ${changeLogMessage}`);
 
-    setOutput3(OUTPUTS.LATEST_TAG, latestRelease);
-    // setOutput3('logs-on-json', logs);
-    setOutput3('change-logs', changeLogMessage);
-    setOutput3('logs-on-text-file', "logs.txt");
+    core.setOutput('latest_tag', latestRelease);
+    core.setOutput('logs-on-json', logs);
+    core.setOutput('change-logs', changeLogMessage);
+    core.setOutput('logs-on-text-file', "logs.txt");
   } catch (error) {
     core.setFailed(error.message);
   }  
@@ -74,23 +65,6 @@ function setupInput(){
   if (!!core.getInput('custom_tags')) {
     tags = JSON.parse(core.getInput('custom_tags'));
   }
-}
-
-
-
-function setOutput2(key, value) {
-  // Temporary hack until core actions library catches up with github new recommendations
-  const output = process.env['GITHUB_OUTPUT']
-  fs.appendFileSync(output, `${key}=${value}${os.EOL}`)
-}
-
-function setOutput3(name, value) {
-  const filePath = process.env['GITHUB_OUTPUT'] || '';
-  if (filePath) {
-      return file_command_1.issueFileCommand('OUTPUT', file_command_1.prepareKeyValueMessage(name, value));
-  }
-  process.stdout.write(os.EOL);
-  command_1.issueCommand('set-output', { name }, utils_1.toCommandValue(value));
 }
 
 
@@ -5957,14 +5931,6 @@ function wrappy (fn, cb) {
     return ret
   }
 }
-
-
-/***/ }),
-
-/***/ 31:
-/***/ ((module) => {
-
-module.exports = eval("require")("@actions/lib/file-command");
 
 
 /***/ }),
