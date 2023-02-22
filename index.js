@@ -7,6 +7,12 @@ let tags = {"feature":'Feature', "bugfixes":'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
 var changeLogMessage = "## What’s New\n";
 
+const OUTPUTS = {
+  LATEST_TAG: 'latest_tag',
+  dockerUsername: 'docker_username',
+  dockerPassword: 'docker_password'
+};
+
 async function main() {
   console.log(tags);
   setupInput();
