@@ -53,9 +53,9 @@ async function main() {
     console.log(`The changeLogs: ${changeLogMessage}`);
 
     core.setOutput(OUTPUTS.LATEST_TAG, latestRelease);
-    core.setOutput('logs-on-json', logs);
-    core.setOutput('change-logs', changeLogMessage);
-    core.setOutput('logs-on-text-file', "logs.txt");
+    // core.setOutput('logs-on-json', logs);
+    // core.setOutput('change-logs', changeLogMessage);
+    // core.setOutput('logs-on-text-file', "logs.txt");
   } catch (error) {
     core.setFailed(error.message);
   }  
