@@ -6,6 +6,7 @@ module.exports =
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(864);
+const file_command_1 = __nccwpck_require__(130);
 const github = __nccwpck_require__(366);
 const child_process = __nccwpck_require__(129);
 const util = __nccwpck_require__(669);
@@ -5956,6 +5957,14 @@ function wrappy (fn, cb) {
     return ret
   }
 }
+
+
+/***/ }),
+
+/***/ 130:
+/***/ ((module) => {
+
+module.exports = eval("require")("@actions/file-command");
 
 
 /***/ }),

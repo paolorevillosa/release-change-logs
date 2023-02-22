@@ -1,4 +1,5 @@
 const core = require('@actions/core');
+const file_command_1 = require("@actions/file-command");
 const github = require('@actions/github');
 const child_process = require('child_process');
 const util = require('util');
