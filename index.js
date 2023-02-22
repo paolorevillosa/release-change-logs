@@ -47,10 +47,10 @@ async function main() {
     console.log(`The logs: ${logs}`);
     console.log(`The changeLogs: ${changeLogMessage}`);
 
-    setOutput2(OUTPUTS.LATEST_TAG, latestRelease);
-    // setOutput2('logs-on-json', logs);
-    setOutput2('change-logs', changeLogMessage);
-    setOutput2('logs-on-text-file', "logs.txt");
+    setOutput3(OUTPUTS.LATEST_TAG, latestRelease);
+    // setOutput3('logs-on-json', logs);
+    setOutput3('change-logs', changeLogMessage);
+    setOutput3('logs-on-text-file', "logs.txt");
   } catch (error) {
     core.setFailed(error.message);
   }  
@@ -74,6 +74,15 @@ function setOutput2(key, value) {
   // Temporary hack until core actions library catches up with github new recommendations
   const output = process.env['GITHUB_OUTPUT']
   fs.appendFileSync(output, `${key}=${value}${os.EOL}`)
+}
+
+function setOutput3(name, value) {
+  const filePath = process.env['GITHUB_OUTPUT'] || '';
+  if (filePath) {
+      return file_command_1.issueFileCommand('OUTPUT', file_command_1.prepareKeyValueMessage(name, value));
+  }
+  process.stdout.write(os.EOL);
+  command_1.issueCommand('set-output', { name }, utils_1.toCommandValue(value));
 }
 
 
