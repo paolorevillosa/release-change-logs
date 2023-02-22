@@ -48,7 +48,7 @@ async function main() {
     console.log(`The changeLogs: ${changeLogMessage}`);
 
     setOutput2(OUTPUTS.LATEST_TAG, latestRelease);
-    setOutput2('logs-on-json', logs);
+    // setOutput2('logs-on-json', logs);
     setOutput2('change-logs', changeLogMessage);
     setOutput2('logs-on-text-file', "logs.txt");
   } catch (error) {
