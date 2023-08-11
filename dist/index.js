@@ -21,6 +21,7 @@ const util = __nccwpck_require__(1669);
 let tags = {"feature":'Feature', "bugfixes":'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
 var changeLogMessage = "## What’s New\n";
+var customCommitHash = "";
 
 async function main() {
   console.log(tags);
@@ -41,7 +42,11 @@ async function main() {
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
-    const latestRelease = await exec('git describe --tags --abbrev=0'); 
+    var latestRelease = await exec('git describe --tags --abbrev=0'); 
+    if(customCommitHash != ''){
+      latestRelease = customCommitHash;
+    }
+
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
     const logs = await exec(logScript)
     
@@ -72,6 +77,10 @@ async function exec(command) {
 function setupInput(){
   if (!!core.getInput('custom_tags')) {
     tags = JSON.parse(core.getInput('custom_tags'));
+  }
+
+  if (!!core.getInput('commit_hash')) {
+    customCommitHash = core.getInput('commit_hash');
   }
 }
 
