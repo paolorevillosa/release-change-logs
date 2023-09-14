@@ -77,6 +77,7 @@ function setupInput(){
  * @param String logs
  */
 async function parseData(logs){
+  var myArray = [];
   var parsedJSON = JSON.parse(logs);
   for( let num in parsedJSON ){
     var log = parsedJSON[num];
@@ -87,6 +88,9 @@ async function parseData(logs){
     var id = splitMessage[1];
 
     if(chageLogTags[type.toLowerCase()] !== undefined){
+      if(myArray.includes(id)){
+        continue;
+      }
       chageLogTags[type.toLowerCase()].push(new Array(type, id, message, log.author, log.original_message, log.commit ));  
     }
   }
