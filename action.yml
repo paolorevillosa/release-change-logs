@@ -16,6 +16,10 @@ inputs:
     description: 'Custom tags as JSON String'
     required: false
     default: '{}'
+  commit_hash:
+    description: 'Commit Hash'
+    required: false
+    default: ''
 outputs:
   latest_tag: # id of output
     description: 'Latest Tag'

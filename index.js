@@ -6,6 +6,7 @@ const util = require('util');
 let tags = {"feature":'Feature', "bugfixes":'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
 var changeLogMessage = "## What’s New\n";
+var customCommitHash = "";
 
 async function main() {
   console.log(tags);
@@ -26,7 +27,11 @@ async function main() {
     const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\"}' | perl -pe 's/},]/}]/'";
     
     //get latest tag
-    const latestRelease = await exec('git describe --tags --abbrev=0'); 
+    var latestRelease = await exec('git describe --tags --abbrev=0'); 
+    if(customCommitHash != ''){
+      latestRelease = customCommitHash;
+    }
+
     const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
     const logs = await exec(logScript)
     
@@ -58,6 +63,10 @@ function setupInput(){
   if (!!core.getInput('custom_tags')) {
     tags = JSON.parse(core.getInput('custom_tags'));
   }
+
+  if (!!core.getInput('commit_hash')) {
+    customCommitHash = core.getInput('commit_hash');
+  }
 }
 
 
@@ -68,6 +77,7 @@ function setupInput(){
  * @param String logs
  */
 async function parseData(logs){
+  var myArray = [];
   var parsedJSON = JSON.parse(logs);
   for( let num in parsedJSON ){
     var log = parsedJSON[num];
@@ -78,6 +88,9 @@ async function parseData(logs){
     var id = splitMessage[1];
 
     if(chageLogTags[type.toLowerCase()] !== undefined){
+      if(myArray.includes(id)){
+        continue;
+      }
       chageLogTags[type.toLowerCase()].push(new Array(type, id, message, log.author, log.original_message, log.commit ));  
     }
   }

@@ -3,19 +3,58 @@
 <p>Click the button to display a String version of the array.</p>
 
 <button onclick="myFunction()">Try it</button>
+<input type="file" id="fileInput" accept=".txt" onchange="validateFile()">
 
 <p id="demo"></p>
 
 <script>
-let tags = {T:'Feature', B:'Bugfixes'}; //default commit tags
+let tags = {T:'Feature', B:'Bugfixes', CB:'Client Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
 var changeLogMessage = "## What’s New\n";
 
+var logs = "";
+
+function validateFile() {
+    var fileInput = document.getElementById("fileInput");
+    var file = fileInput.files[0]; // Get the selected file
+    
+    if (!file) {
+        alert('Please select a file.');
+        return;
+    }
+    
+    var allowedExtensions = /(\.txt)$/i;
+    var filename = file.name;
+    
+    if (!allowedExtensions.exec(filename)) {
+        alert('Please upload only .txt files.');
+        return;
+    }
+    
+    var reader = new FileReader();
+    
+    reader.onload = function(event) {
+        var fileContent = event.target.result;
+        logs = (fileContent);
+        myFunction();
+    };
+    
+    reader.readAsText(file); // Read the file as text
+}
+
+function escapeSpecialChars(jsonString) {
+    return jsonString.replace('\\', '\\\\')
+          .replace('"', '\\"')
+          .replace('\n', '\\n')
+          .replace('\t', '\\t');
+}
+
 function myFunction() {
   console.log(tags);
-  tags = JSON.parse('{"T":"Feature", "B":"Bugfixes"}');
+  tags = JSON.parse('{"T":"Feature", "B":"Bugfixes", "CB":"Client Bugfixes"}');
   console.log(tags);
-  var logs = "[{\"commit\": \"36298b32f790bc74f1fd05844945fabd92a768a3\",\"author\": \"Rj Rodriguez\",\"date\": \"Thu Apr 8 18:11:02 2021 +0800\",\"message\": \"B-2345\", \"original_message\": \"[B][2345] Added functionality\"},{\"commit\": \"b323ef3321c460575ed2ab214a53463c9bb21fa7\",\"author\": \"Rj Rodriguez\",\"date\": \"Thu Apr 8 18:10:23 2021 +0800\",\"message\": \"Merge-pull-request-1682-from-Migs-Engagia-task-2345-AccountProductAssignment\", \"original_message\": \"Merge pull request #1682 from Migs-Engagia/task/2345/AccountProductAssignment\"},{\"commit\": \"30362ba6d188f9274e4599ffaaecdf1233776e29\",\"author\": \"rodriguezrj14\",\"date\": \"Tue Mar 30 10:44:13 2021 +0800\",\"message\": \"T-2345\", \"original_message\": \"[T][2345]\"}]";
+
+  
   //var tags = {t:'Feature', B:'Bugfixes'};
   //var chageLogTags = new Array();
   
@@ -32,7 +71,8 @@ function myFunction() {
 }
 
 function parseData(logs){
-  var parsedJSON = JSON.parse(logs);
+  var myArray = [];
+  var parsedJSON = JSON.parse((logs));
   for( let num in parsedJSON ){
     var log = parsedJSON[num];
     var message = log.message;
@@ -42,6 +82,10 @@ function parseData(logs){
     var id = splitMessage[1];
 
     if(chageLogTags[type.toLowerCase()] !== undefined){
+      if(myArray.includes(id)){
+        continue;
+      }
+      myArray.push(id);
       chageLogTags[type.toLowerCase()].push(new Array(type, id, message, log.author, log.original_message ));  
     }
   }
