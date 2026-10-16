@@ -2,6 +2,11 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const child_process = require('child_process');
 const util = require('util');
+const fs = require('fs');
+
+//non-printable separators so commit fields can contain any character (quotes, backslashes, commas, etc)
+const FIELD_SEPARATOR = '\x1f';
+const RECORD_SEPARATOR = '\x1e';
 
 let tags = {"feature":'Feature', "bugfixes":'Bugfixes'}; //default commit tags
 var chageLogTags = new Array();
@@ -9,11 +14,11 @@ var changeLogMessage = "## What’s New\n";
 var customCommitHash = "";
 
 async function main() {
-  console.log(tags);
-  setupInput();
-  console.log(tags);
-
   try {
+    console.log(tags);
+    setupInput();
+    console.log(tags);
+
     //setup commit prefix tags
     for (let key in tags){
       //set data to lower case to avoid issue regarding data
@@ -22,21 +27,21 @@ async function main() {
     };
     console.log(chageLogTags);
 
-    //define git log script for easy debuggin, this will return data as json file
-    const format = ' --pretty=format:\'{"commit": "%h","author": "%aN","date": "%ad","message": "%f", "original_message": "%s"},\'';
-    const endPart =  "$@ | perl -pe 'BEGIN{print \"[\"}; END{print \"]\"}' | perl -pe 's/},]/}]/'";
-    
     //get latest tag
-    var latestRelease = await exec('git describe --tags --abbrev=0'); 
-    if(customCommitHash != ''){
-      latestRelease = customCommitHash;
+    var latestRelease = customCommitHash;
+    if(latestRelease == ''){
+      latestRelease = await exec('git', ['describe', '--tags', '--abbrev=0']);
     }
 
-    const logScript = "git log " + latestRelease + "..HEAD " + format + endPart;
-    const logs = await exec(logScript)
-    
-    await parseData(logs);
-    await exec(logScript + " > logs.txt");
+    //fields are separated by control characters and converted to json here,
+    //so special characters on commit messages/authors will not break the json
+    const format = '--pretty=format:' + ['%h', '%aN', '%ad', '%f', '%s'].join('%x1f') + '%x1e';
+    const rawLogs = await exec('git', ['log', latestRelease + '..HEAD', format]);
+    const parsedLogs = parseGitLog(rawLogs);
+    const logs = JSON.stringify(parsedLogs);
+
+    await parseData(parsedLogs);
+    fs.writeFileSync('logs.txt', logs);
 
 
     //log this for debugging purposes
@@ -53,19 +58,39 @@ async function main() {
   }  
 }
 
-async function exec(command) {
-      const { stdout, stderr } = await util.promisify(child_process.exec)(command)
+async function exec(command, args) {
+      //execFile does not use a shell, so inputs with special characters are passed as is
+      const { stdout, stderr } = await util.promisify(child_process.execFile)(command, args, { maxBuffer: 50 * 1024 * 1024 })
       if (stderr) console.error(stderr)
       return stdout.trim();
 }
 
+/**
+ * Convert raw git log output into array of commit objects
+ *
+ * @param String rawLogs
+ */
+function parseGitLog(rawLogs){
+  return rawLogs.split(RECORD_SEPARATOR)
+    .map(record => record.replace(/^\s+/, ''))
+    .filter(record => record !== '')
+    .map(record => {
+      const [commit, author, date, message, original_message] = record.split(FIELD_SEPARATOR);
+      return { commit, author, date, message, original_message };
+    });
+}
+
 function setupInput(){
   if (!!core.getInput('custom_tags')) {
-    tags = JSON.parse(core.getInput('custom_tags'));
+    try {
+      tags = JSON.parse(core.getInput('custom_tags'));
+    } catch (error) {
+      throw new Error('custom_tags must be a valid JSON string: ' + error.message);
+    }
   }
 
   if (!!core.getInput('commit_hash')) {
-    customCommitHash = core.getInput('commit_hash');
+    customCommitHash = core.getInput('commit_hash').trim();
   }
 }
 
@@ -74,14 +99,13 @@ function setupInput(){
  * Will parse json based on tags provided
  * and will generate change logs
  *
- * @param String logs
+ * @param Array parsedJSON
  */
-async function parseData(logs){
+async function parseData(parsedJSON){
   var myArray = [];
-  var parsedJSON = JSON.parse(logs);
   for( let num in parsedJSON ){
     var log = parsedJSON[num];
-    var message = log.message;
+    var message = log.message || '';
     
     var splitMessage = message.split("-");
     var type = splitMessage[0];
